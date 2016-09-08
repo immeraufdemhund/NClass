@@ -14,57 +14,18 @@ namespace NClass.AssemblyCSharpImport
 {
     internal class CSharpImport
     {
-        // ========================================================================
-        // Con- / Destruction
-
-        #region === Con- / Destruction
+        /// <summary>
+        ///     The diagram to add the new entities to.
+        /// </summary>
+        private readonly Diagram _diagram;
 
         /// <summary>
         ///     Initializes a new instance of <see cref="CSharpImport" />.
         /// </summary>
-        public CSharpImport(Diagram diagram, ImportSettings settings)
+        public CSharpImport(Diagram diagram)
         {
-            this.diagram = diagram;
-            this.settings = settings;
+            _diagram = diagram;
         }
-
-        // ========================================================================
-        // Properties
-
-        #region === Properties
-
-        #endregion
-
-        #endregion
-
-        // ========================================================================
-        // Constants
-
-        #region === Constants
-
-        #endregion
-
-        // ========================================================================
-        // Fields
-
-        #region === Fields
-
-        /// <summary>
-        ///     The diagram to add the new entities to.
-        /// </summary>
-        private readonly Diagram diagram;
-
-        /// <summary>
-        ///     An <see cref="ImportSettings" /> instance which describes which entities and members to reflect.
-        /// </summary>
-        private readonly ImportSettings settings;
-
-        #endregion
-
-        // ========================================================================
-        // Methods
-
-        #region === Methods
 
         /// <summary>
         ///     The main entry point of this class. Imports the C# file which is given
@@ -84,8 +45,8 @@ namespace NClass.AssemblyCSharpImport
             }
             try
             {
-                diagram.Name = Path.GetFileName(fileName);
-                diagram.RedrawSuspended = true;
+                _diagram.Name = Path.GetFileName(fileName);
+                _diagram.RedrawSuspended = true;
 
                 var parser = new CSharpParser();
 
@@ -121,7 +82,7 @@ namespace NClass.AssemblyCSharpImport
                         foreach (var dd in syntaxTree.Descendants.OfType<DelegateDeclaration>())
                             AddDelegate(dd);
 
-                        Common.ArrangeTypes(diagram);
+                        Common.ArrangeTypes(_diagram);
 
                         /*
                         RelationshipCreator relationshipCreator = new RelationshipCreator();
@@ -156,28 +117,18 @@ namespace NClass.AssemblyCSharpImport
             }
             finally
             {
-                diagram.RedrawSuspended = false;
+                _diagram.RedrawSuspended = false;
             }
 
             return true;
         }
 
         /// <summary>
-        ///     Adds the relationships from <paramref name="" /> to the
-        ///     diagram.
-        /// </summary>
-        private void AddRelationships()
-        {
-        }
-
-        #region --- Entities
-
-        /// <summary>
         ///     Adds the submitted classes to the diagram.
         /// </summary>
         private void AddClass(TypeDeclaration classTp)
         {
-            var classType = diagram.AddClass();
+            var classType = _diagram.AddClass();
             classType.Name = classTp.Name;
             classType.AccessModifier = classTp.Modifiers.ToNClass();
             classType.Modifier = classTp.Modifiers.ToNClassFromClass();
@@ -196,7 +147,7 @@ namespace NClass.AssemblyCSharpImport
         /// </summary>
         private void AddStrct(TypeDeclaration strctTp)
         {
-            var structureType = diagram.AddStructure();
+            var structureType = _diagram.AddStructure();
             structureType.Name = strctTp.Name;
             structureType.AccessModifier = strctTp.Modifiers.ToNClass();
 
@@ -214,7 +165,7 @@ namespace NClass.AssemblyCSharpImport
         /// </summary>
         private void AddInterface(TypeDeclaration interfaceTp)
         {
-            var interfaceType = diagram.AddInterface();
+            var interfaceType = _diagram.AddInterface();
             interfaceType.Name = interfaceTp.Name;
             interfaceType.AccessModifier = interfaceTp.Modifiers.ToNClass();
 
@@ -228,7 +179,7 @@ namespace NClass.AssemblyCSharpImport
         /// </summary>
         private void AddDelegate(DelegateDeclaration dd)
         {
-            var delegateType = diagram.AddDelegate();
+            var delegateType = _diagram.AddDelegate();
             delegateType.Name = dd.Name;
             delegateType.AccessModifier = dd.Modifiers.ToNClass();
             delegateType.ReturnType = dd.ReturnType.ToString();
@@ -242,16 +193,12 @@ namespace NClass.AssemblyCSharpImport
         /// </summary>
         private void AddEnum(TypeDeclaration enumTp)
         {
-            var enumType = diagram.AddEnum();
+            var enumType = _diagram.AddEnum();
             enumType.Name = enumTp.Name;
             enumType.AccessModifier = enumTp.Modifiers.ToNClass();
 
             AddEnumValues(enumType, enumType.Values);
         }
-
-        #endregion
-
-        #region --- Member
 
         /// <summary>
         ///     Adds the given fields to the given type.
@@ -288,7 +235,6 @@ namespace NClass.AssemblyCSharpImport
 
                 prop.Name = pp.Name;
                 prop.AccessModifier = pp.Modifiers.ToNClass();
-                ;
                 prop.Type = pp.ReturnType.ToString();
             }
         }
@@ -328,15 +274,15 @@ namespace NClass.AssemblyCSharpImport
                 cons.Name = cp.Name;
                 cons.AccessModifier = cp.Modifiers.ToNClass();
 
-                var Arg = new CSharpArgumentList();
+                var arg = new CSharpArgumentList();
 
                 foreach (var ichParameter in cp.Parameters)
-                    Arg.Add(ichParameter.Name,
+                    arg.Add(ichParameter.Name,
                             ichParameter.Type.ToString(),
                             ichParameter.ParameterModifier.ToNClass(),
                             ichParameter.DefaultExpression.ToString());
 
-                cons.ArgumentList = Arg;
+                cons.ArgumentList = arg;
             }
         }
 
@@ -369,7 +315,7 @@ namespace NClass.AssemblyCSharpImport
                 method.Type = mp.ReturnType.ToString();
                 method.AccessModifier = mp.Modifiers.ToNClass();
 
-                var Arg = new CSharpArgumentList();
+                var arg = new CSharpArgumentList();
 
                 foreach (var ichParameter in mp.Parameters)
                 {
@@ -380,13 +326,13 @@ namespace NClass.AssemblyCSharpImport
                         defaultValue = defaultExpression.Value.ToString();
                     }
 
-                    Arg.Add(ichParameter.Name,
+                    arg.Add(ichParameter.Name,
                             ichParameter.Type.ToString(),
                             ichParameter.ParameterModifier.ToNClass(),
                             defaultValue);
                 }
 
-                method.ArgumentList = Arg;
+                method.ArgumentList = arg;
             }
         }
 
@@ -403,15 +349,15 @@ namespace NClass.AssemblyCSharpImport
                 method.Type = op.ReturnType.ToString();
                 method.AccessModifier = op.Modifiers.ToNClass();
 
-                var Arg = new CSharpArgumentList();
+                var arg = new CSharpArgumentList();
 
                 foreach (var ichParameter in op.Parameters)
-                    Arg.Add(ichParameter.Name,
+                    arg.Add(ichParameter.Name,
                             ichParameter.Type.ToString(),
                             ichParameter.ParameterModifier.ToNClass(),
                             ichParameter.DefaultExpression.ToString());
 
-                method.ArgumentList = Arg;
+                method.ArgumentList = arg;
             }
         }
 
@@ -425,9 +371,5 @@ namespace NClass.AssemblyCSharpImport
             foreach (var enumValue in values)
                 type.AddValue(enumValue.Name);
         }
-
-        #endregion
-
-        #endregion
     }
 }
