@@ -26,9 +26,9 @@ namespace NClass.GUI
         {
             /*
             // TO DO: Manage an exception if are loaded
-			Language defaultLanguage = Language.GetLanguage(DefaultLanguageName);
+            Language defaultLanguage = Language.GetLanguage(DefaultLanguageName);
 
-			return defaultLanguage ?? CSharpLanguage.Instance;
+            return defaultLanguage ?? CSharpLanguage.Instance;
             */
             var defaultLanguage = Language.GetLanguage(DefaultLanguageName);
 

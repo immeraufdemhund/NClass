@@ -66,7 +66,7 @@ namespace NClass.CodeGenerator
                     break;
                 default:
                     // unknow value!
-                    // TO DO : Throw an error
+                    // TODO : Throw an error
                     break;
             }
 

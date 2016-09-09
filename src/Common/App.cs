@@ -15,11 +15,12 @@ namespace NClass.Common
         private static readonly ILog Logger = LogManager.GetLogger(typeof (App));
         private string config_log_file = string.Empty;
 
-        public LanguageManager LngMg;
+        public readonly LanguageManager LngMg;
 
         public App()
         {
-            var LngMg = new LanguageManager();
+            LngMg = LanguageManager.Instance;
+            //TODO background task to load all
         }
 
         public bool ArgumentLog(int i, int length, string nextArg)
