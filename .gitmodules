@@ -1,0 +1,3 @@
+[submodule "NReflect"]
+	path = NReflect
+	url = https://github.com/immeraufdemhund/NReflect.git

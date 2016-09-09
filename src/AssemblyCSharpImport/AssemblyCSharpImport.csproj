@@ -121,10 +121,9 @@
     <Compile Include="Settings.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\lib\NReflect_v0.9.4_src\NReflect\NReflect.csproj">
+    <ProjectReference Include="..\..\NReflect\NReflect\NReflect.csproj">
       <Project>{760af36d-9463-491d-9fd0-b9c429d8030c}</Project>
       <Name>NReflect</Name>
-      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Core\Core.csproj">
       <Project>{8CF10505-3C2E-4E45-AB90-21613237B412}</Project>
